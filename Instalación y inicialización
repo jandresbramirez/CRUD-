@@ -1,0 +1,5 @@
+Inicializar node.js:
+npm init -y
+
+Instalar librerias y motor de plantillas:
+npm install express mysql2 body-parser ejs
