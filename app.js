@@ -109,3 +109,56 @@ app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });
 
+
+
+// app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./db');
+
+const app = express();
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+// Mostrar página principal
+app.get('/', (req, res) => {
+    db.query('SELECT * FROM usuario', (err, results) => {
+        if (err) throw err;
+        res.render('index', { users: results });
+    });
+});
+
+// Agregar usuario
+app.post('/add-user', (req, res) => {
+    const { Cedula, Nombres, Apellidos, FechaDeNacimiento, Correo, Contraseña } = req.body;
+    const query = `INSERT INTO usuario (Cedula, Nombres, Apellidos, FechaDeNacimiento, Correo, Contraseña) VALUES (?, ?, ?, ?, ?, ?)`;
+    db.query(query, [Cedula, Nombres, Apellidos, FechaDeNacimiento, Correo, Contraseña], (err) => {
+        if (err) throw err;
+        res.redirect('/');
+    });
+});
+
+// Actualizar usuario
+app.post('/update-user', (req, res) => {
+    const { Cedula, Nombres, Apellidos, FechaDeNacimiento, Correo, Contraseña } = req.body;
+    const query = `UPDATE usuario SET Nombres = ?, Apellidos = ?, FechaDeNacimiento = ?, Correo = ?, Contraseña = ? WHERE Cedula = ?`;
+    db.query(query, [Nombres, Apellidos, FechaDeNacimiento, Correo, Contraseña, Cedula], (err) => {
+        if (err) throw err;
+        res.redirect('/');
+    });
+});
+
+// Eliminar usuario
+app.get('/delete-user/:cedula', (req, res) => {
+    const { cedula } = req.params;
+    db.query('DELETE FROM usuario WHERE Cedula = ?', [cedula], (err) => {
+        if (err) throw err;
+        res.redirect('/');
+    });
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+});
