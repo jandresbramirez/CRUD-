@@ -117,3 +117,70 @@
     </table>
 </body>
 </html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD con Node.js y MySQL</title>
+</head>
+<body>
+    <h1>Gestión de Usuarios</h1>
+
+    <!-- Formulario para agregar usuario -->
+    <form action="/add-user" method="POST">
+        <input type="text" name="Cedula" placeholder="Cédula" required>
+        <input type="text" name="Nombres" placeholder="Nombres" required>
+        <input type="text" name="Apellidos" placeholder="Apellidos" required>
+        <input type="date" name="FechaDeNacimiento" required>
+        <input type="email" name="Correo" placeholder="Correo Electrónico" required>
+        <input type="password" name="Contraseña" placeholder="Contraseña" required>
+        <button type="submit">Agregar Usuario</button>
+    </form>
+
+    <!-- Tabla para mostrar usuarios -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Cédula</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Correo Electrónico</th>
+                <th>Contraseña</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.cedula %></td>
+                <td><%= user.nombres %></td>
+                <td><%= user.apellidos %></td>
+                <td><%= user.fecha_nacimiento %></td>
+                <td><%= user.correo %></td>
+                <td>******</td> <!-- Oculta la contraseña -->
+                <td>
+                    <!-- Formulario de actualización en línea -->
+                    <form action="/update-user" method="POST" style="display:inline;">
+                        <input type="hidden" name="Cedula" value="<%= user.cedula %>">
+                        <input type="text" name="Nombres" value="<%= user.nombres %>" required>
+                        <input type="text" name="Apellidos" value="<%= user.apellidos %>" required>
+                        <input type="date" name="FechaDeNacimiento" value="<%= user.fecha_nacimiento %>" required>
+                        <input type="email" name="Correo" value="<%= user.correo %>" required>
+                        <input type="password" name="Contraseña" placeholder="Nueva Contraseña">
+                        <button type="submit">Actualizar</button>
+                    </form>
+                    
+                    <!-- Botón de eliminación -->
+                    <a href="/delete-user/<%= user.Cedula %>" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">Eliminar</a>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>
